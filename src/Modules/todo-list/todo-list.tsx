@@ -1,30 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-
-type Todo = {
-   id: number,
-   text: string,
-   done: boolean,
-   
-}
-
-export const getTasks = () => {
-   return new Promise<Todo[]>(res => {
-      setTimeout(() => {
-         res([
-            { 
-               id: 1, 
-               text: 'todo1', 
-               done: false 
-            },
-            { 
-               id: 2, 
-               text: 'todo2', 
-               done: false 
-            }
-         ]);
-      }, 1000)
-   });
-};
+import { todoListApi } from "./api";
 
 export default function TodoList() {
 
@@ -33,8 +8,8 @@ export default function TodoList() {
 
    //queryFn - это любая асинхронная функция, которая возвращает Promise, который затем будет использоваться в качестве результата запроса
    const {data, error, isPending} = useQuery({
-      queryKey: ['tasks', 'list'], 
-      queryFn: getTasks
+      queryKey: ["tasks", "list"], 
+      queryFn: todoListApi.getTodoList
    })
 
    if (isPending) return <div>Loading...</div>
@@ -44,7 +19,7 @@ export default function TodoList() {
    return (
       <div>
          TodoList
-         {data.map(todo => ( 
+         {data.map(todo => (
             <div key={todo.id}> {todo.text}</div>
          ))}
       </div>

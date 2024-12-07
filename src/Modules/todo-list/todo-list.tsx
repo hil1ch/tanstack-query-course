@@ -17,11 +17,15 @@ export default function TodoList() {
    if (error) return <div>error: {JSON.stringify(error)}</div>
 
    return (
-      <div>
-         TodoList
-         {data.map(todo => (
-            <div key={todo.id}> {todo.text}</div>
-         ))}
+      <div className="p-5 mx-auto max-w-[1200px] mt-10">
+         <h1 className="text-3xl font-bold underline mb-5">Todo List</h1>
+
+         <div className="flex flex-col gap-4">
+            {data.map(todo => (
+               <div className="border border-slate-300 rounded p-3" key={todo.id}> {todo.text}</div>
+            ))}
+         </div>
+
       </div>
    )
 }

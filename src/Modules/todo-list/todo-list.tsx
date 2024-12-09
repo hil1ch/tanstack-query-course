@@ -1,5 +1,5 @@
 import { useState } from "react"; 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { todoListApi } from "./api";
 
 export default function TodoList() {
@@ -10,9 +10,13 @@ export default function TodoList() {
    //queryKey: ['tasks', 'list'] - это массив, где 'tasks' - это имя ключа для этого запроса, 'list' - это имя для этого запроса в массиве ключей
 
    //queryFn - это любая асинхронная функция, которая возвращает Promise, который затем будет использоваться в качестве результата запроса
-   const {data: todoItems, error, isPending} = useQuery({
+   const {data: todoItems, error, isPending, isPlaceholderData} = useQuery({
       queryKey: ["tasks", "list", {page}], 
       queryFn: (meta) => todoListApi.getTodoList({page}, meta),
+
+      // placeholderData - это данные, которые будут показаны во время загрузки запроса. Это может помочь избежать пустого экрана при загрузке
+      // keepPreviousData - предыдущие данные, показывающиеся при загрузке страницы
+      placeholderData: keepPreviousData
    });
 
    if (isPending) return <div>Loading...</div>
@@ -23,7 +27,7 @@ export default function TodoList() {
       <div className="p-5 mx-auto max-w-[1200px] mt-10">
          <h1 className="text-3xl font-bold underline mb-5">Todo List</h1>
 
-         <div className="flex flex-col gap-4">
+         <div className={"flex flex-col gap-4" + (isPlaceholderData ? "opacity-50":"")}>
             {todoItems.data.map(todo => (
                <div className="border border-slate-300 rounded p-3" key={todo.id}>{todo.text}</div>
             ))}

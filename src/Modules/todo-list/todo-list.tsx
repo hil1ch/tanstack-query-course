@@ -13,17 +13,12 @@ export default function TodoList() {
    
    //Бесконечный скролл - когда отображаются данные при прокрутке страницы
    const {data: todoItems, error, isLoading, isPlaceholderData, fetchNextPage, hasNextPage, isFetchingNextPage} = useInfiniteQuery({
-      queryKey: ["tasks", "list"], 
-      queryFn: (meta) => todoListApi.getTodoList({page: meta.pageParam}, meta),
+      ...todoListApi.getTodoListInfinityQueryOptions(),
+      enabled: enabled,
 
       // placeholderData - это данные, которые будут показаны во время загрузки запроса. Это может помочь избежать пустого экрана при загрузке
       // keepPreviousData - предыдущие данные, показывающиеся при загрузке страницы
-      initialPageParam: 1,
-      getNextPageParam: (result) => result.next,
-
-      // enabled - это булево значение, которое определяет, разрешено ли выполнение запроса. Если он установлен в false, запрос не будет выполнен
-      enabled: enabled,
-      select: result => result.pages.flatMap(page => page.data)
+      
    });
 
    const cursorRef = useIntersection(() => {
